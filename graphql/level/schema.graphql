@@ -1,0 +1,36 @@
+type Level {
+    id: ID!
+    nama: String!
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+input CreateLevelInput {
+    nama: String!
+}
+
+input UpdateLevelInput {
+    id: ID!
+    nama: String!
+}
+
+extend type Query {
+    allLevel: [Level!]! @all(model: "App\\Models\\ModelLevels")
+
+    Level(id: ID! @eq(key: "id")): Level
+        @find(model: "App\\Models\\ModelLevels")
+
+    LevelByNama(nama: String! @where(operator: "like", key: "nama")): [Level!]!
+        @all(model: "App\\Models\\ModelLevels")
+}
+
+extend type Mutation {
+    createLevelInput(input: CreateLevelInput @spread): Level
+        @create(model: "App\\Models\\ModelLevels")
+
+    updateLevelInput(input: UpdateLevelInput @spread): Level
+        @update(model: "App\\Models\\ModelLevels")
+
+    deleteLevel(id: ID! @eq(key: "id")): Level
+        @delete(model: "App\\Models\\ModelLevels")
+}

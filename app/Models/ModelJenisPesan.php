@@ -22,7 +22,7 @@ class ModelJenisPesan extends Model
     ];
 
     public function pesan() {
-        return $this->hasMany(ModelPesan::class, 'jenis_id', 'id');
+        return $this->hasMany(ModelPesan::class, 'jenis_id');
     }
 
 }

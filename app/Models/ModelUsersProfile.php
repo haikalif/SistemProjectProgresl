@@ -38,19 +38,19 @@ class ModelUsersProfile extends Model
     }
 
     public function proyekUsers() {
-        return $this->hasMany(ModelProyekUser::class, 'users_profile_id', 'id');
+        return $this->hasMany(ModelProyekUser::class, 'users_profile_id');
     }
 
     public function jamKerja() {
-        return $this->hasMany(ModelJamKerja::class, 'users_profile_id', 'id');
+        return $this->hasMany(ModelJamKerja::class, 'users_profile_id');
     }
 
     public function jamPerTanggal() {
-        return $this->hasMany(ModelJamPerTanggal::class, 'users_profile_id', 'id');
+        return $this->hasMany(ModelJamPerTanggal::class, 'users_profile_id');
     }
 
     public function lembur() {
-        return $this->hasMany(ModelLembur::class, 'users_profile_id', 'id');
+        return $this->hasMany(ModelLembur::class, 'users_profile_id');
     }
 
 }

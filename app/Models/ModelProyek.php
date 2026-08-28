@@ -22,23 +22,23 @@ class ModelProyek extends Model
     ];
 
     public function proyekUsers() {
-        return $this->hasMany(ModelProyekUser::class, 'proyek_id', 'id');
+        return $this->hasMany(ModelProyekUser::class, 'proyek_id');
     }
 
     public function jamKerja() {
-        return $this->hasMany(ModelJamKerja::class, 'proyek_id', 'id');
+        return $this->hasMany(ModelJamKerja::class, 'proyek_id');
     }
 
     public function jamPerTanggal() {
-        return $this->hasMany(ModelJamPerTanggal::class, 'proyek_id', 'id');
+        return $this->hasMany(ModelJamPerTanggal::class, 'proyek_id');
     }
 
     public function keterangan() {
-        return $this->hasMany(ModelKeterangan::class, 'proyek_id', 'id');
+        return $this->hasMany(ModelKeterangan::class, 'proyek_id');
     }
 
     public function lembur() {
-        return $this->hasMany(ModelLembur::class, 'proyek_id', 'id');
+        return $this->hasMany(ModelLembur::class, 'proyek_id');
     }
 
 }

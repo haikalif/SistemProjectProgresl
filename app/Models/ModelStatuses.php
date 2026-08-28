@@ -22,7 +22,7 @@ class ModelStatuses extends Model
     ];
 
     public function usersProfiles() {
-        return $this->hasMany(ModelUsersProfile::class, 'status_id', 'id');
+        return $this->hasMany(ModelUsersProfile::class, 'status_id');
     }
 
 }

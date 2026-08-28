@@ -22,7 +22,7 @@ class ModelModeJamKerja extends Model
     ];
 
     public function jamKerja() {
-        return $this->hasMany(ModelJamKerja::class, 'mode_id', 'id');
+        return $this->hasMany(ModelJamKerja::class, 'mode_id');
     }
 
 }

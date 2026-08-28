@@ -22,7 +22,7 @@ class ModelLevels extends Model
     ];
 
     public function usersProfiles() {
-        return $this->hasMany(ModelUsersProfile::class, 'level_id', 'id');
+        return $this->hasMany(ModelUsersProfile::class, 'level_id');
     }
 
 }

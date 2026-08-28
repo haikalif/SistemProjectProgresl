@@ -30,7 +30,7 @@ class ModelPesan extends Model
     }
 
     public function replies() {
-        return $this->hasMany(ModelPesan::class, 'parent_id', 'id');
+        return $this->hasMany(ModelPesan::class, 'parent_id');
     }
 
 }

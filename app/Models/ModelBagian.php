@@ -18,15 +18,15 @@ class ModelBagian extends Model
     ];
 
     public function aktivitas() {
-        return $this->hasMany(ModelAktivitas::class, 'bagian_id', 'id');
+        return $this->hasMany(ModelAktivitas::class, 'bagian_id');
     }
 
     public function usersProfiles() {
-        return $this->hasMany(ModelUsersProfile::class, 'bagian_id', 'id');
+        return $this->hasMany(ModelUsersProfile::class, 'bagian_id');
     }
 
     public function keterangan() {
-        return $this->hasMany(ModelKeterangan::class, 'bagian_id', 'id');
+        return $this->hasMany(ModelKeterangan::class, 'bagian_id');
     }
 
 }

@@ -1,0 +1,51 @@
+type UserProfile {
+    id: ID!
+    user_id: ID!
+    nama_lengkap: String!
+    nrp: String
+    alamat: String
+    foto: String
+    bagian_id: ID
+    level_id: ID
+    status_id: ID
+}
+
+input CreateUsersProfile {
+    user_id: ID!
+    nama_lengkap: String!
+    nrp: String
+    alamat: String
+    foto: String
+    bagian_id: ID
+    level_id: ID
+    status_id: ID
+}
+
+input UpdateUsersProfile {
+    id: ID!
+    user_id: ID!
+    nama_lengkap: String!
+    nrp: String
+    alamat: String
+    foto: String
+    bagian_id: ID
+    level_id: ID
+    status_id: ID
+}
+
+extend type Query{
+    allUsersProfile: [UsersProfile!]! @all(model: "App\\Models\\ModelUsersProfile")
+
+    UsersProfile(id: ID! @eq(key: "id")): UsersProfiles
+    @find(model: "App\\Models\\ModelUsersProfile")
+
+    UsersProfileByNama(nama_lengkap: String! @where(operator: "like", key: "nama_lengkap")): [UsersProfile!]! @all(model: "App\\Models\\ModelUsersProfile")
+}
+
+extend type Mutation{
+    createUsersProfileInput(input: CreateUsersProfile @spread): UsersProfile @create(model: "App\\Models\\ModelUsersProfile")
+
+    updateUsersProfileInput(input: UpdateUsersProfile @spread):
+    UsersProfile @update(model: "")
+
+}

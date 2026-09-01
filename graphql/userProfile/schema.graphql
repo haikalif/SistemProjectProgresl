@@ -33,19 +33,39 @@ input UpdateUsersProfile {
     status_id: ID
 }
 
-extend type Query{
-    allUsersProfile: [UsersProfile!]! @all(model: "App\\Models\\ModelUsersProfile")
+extend type Query {
+    allUsersProfile: [UserProfile!]!
+        @all(model: "App\\Models\\ModelUsersProfile")
+        @softDeletes
 
-    UsersProfile(id: ID! @eq(key: "id")): UsersProfiles
-    @find(model: "App\\Models\\ModelUsersProfile")
+    UsersProfile(id: ID! @eq(key: "id")): UserProfile
+        @find(model: "App\\Models\\ModelUsersProfile")
+        @softDeletes
 
-    UsersProfileByNama(nama_lengkap: String! @where(operator: "like", key: "nama_lengkap")): [UsersProfile!]! @all(model: "App\\Models\\ModelUsersProfile")
+    UsersProfileByNama(
+        nama_lengkap: String! @where(operator: "like", key: "nama_lengkap")
+    ): [UserProfile!]!
+        @all(model: "App\\Models\\ModelUsersProfile")
+        @softDeletes
 }
 
-extend type Mutation{
-    createUsersProfileInput(input: CreateUsersProfile @spread): UsersProfile @create(model: "App\\Models\\ModelUsersProfile")
+extend type Mutation {
+    createUsersProfileInput(input: CreateUsersProfile @spread): UserProfile
+        @create(model: "App\\Models\\ModelUsersProfile")
 
-    updateUsersProfileInput(input: UpdateUsersProfile @spread):
-    UsersProfile @update(model: "")
+    updateUsersProfileInput(input: UpdateUsersProfile @spread): UserProfile
+        @update(model: "App\\Models\\ModelUsersProfile")
 
+    deleteUsersProfile(id: ID! @eq(key: "id")): UserProfile
+        @delete(model: "App\\Models\\ModelUsersProfile")
+
+    restoreUsersProfile(id: ID! @eq(key: "id")): UserProfile
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\UsersProfile\\usersProfile@restore"
+        )
+
+    forceDeleteUsersProfile(id: ID! @eq(key: "id")): UserProfile
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\UsersProfile\\usersProfile@forceDelete"
+        )
 }

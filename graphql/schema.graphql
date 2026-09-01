@@ -6,3 +6,4 @@ type Mutation
 
 #import bagian/schema.graphql
 #import level/schema.graphql
+#import userProfile/schema.graphql

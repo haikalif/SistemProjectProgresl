@@ -8,6 +8,9 @@ type UserProfile {
     bagian_id: ID
     level_id: ID
     status_id: ID
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
 }
 
 input CreateUsersProfile {

@@ -1,9 +1,9 @@
 type Level {
-    id: ID!
-    nama: String!
-    created_at: DateTime
-    updated_at: DateTime
-    deleted_at: DateTime
+        id: ID!
+        nama: String!
+        created_at: DateTime
+        updated_at: DateTime
+        deleted_at: DateTime
 }
 
 input CreateLevelInput {

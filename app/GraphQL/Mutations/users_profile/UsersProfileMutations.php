@@ -11,14 +11,18 @@ class UsersProfileMutations
     {
 
         $usersProfile = ModelUsersProfile::withTrashed()->find($args['id']);
-        $usersProfile->restore();
-        return $usersProfile;
+        if($usersProfile) {
+            $usersProfile->restore();
+            return $usersProfile;
+        }
     }
 
     public function forceDelete($_, array $args)
     {
         $usersProfile = ModelUsersProfile::withTrashed()->find($args['id']);
-        $usersProfile->forceDelete();
-        return $usersProfile;
+        if($usersProfile) {
+            $usersProfile->forceDelete();
+            return $usersProfile;
+        }
     }
 }

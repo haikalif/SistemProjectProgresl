@@ -11,15 +11,19 @@ class levelMutations
     {
 
         $level = ModelLevels::withTrashed()->find($args['id']);
-        $level->restore();
-        return $level;
+        if($level) {
+            $level->restore();
+            return $level;
+        }
     }
 
     public function forceDelete($_, array $args)
     {
 
         $level = ModelLevels::withTrashed()->find($args['id']);
-        $level->forceDelete();
-        return $level;
+        if($level) {
+            $level->forceDelete();
+            return $level;
+        }
     }
 }

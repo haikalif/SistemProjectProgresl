@@ -4,6 +4,8 @@ type Status{
     created_at: DateTime
     updated_at: DateTime
     deleted_at: DateTime
+
+    usersProfile: [UsersProfile!]! @hasMany
 }
 
 extend type Query {

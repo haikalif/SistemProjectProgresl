@@ -8,6 +8,35 @@ type UserProfile {
     bagian_id: ID
     level_id: ID
     status_id: ID
+
+    bagian: Bagian @belongsTo
+    level: Level @belongsTo
+    status: Status @belongsTo
+
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+}
+
+type Bagian {
+    id: ID!
+    nama_bagian: String!
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+}
+
+type Level {
+    id: ID!
+    nama_level: String!
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+}
+
+type Status {
+    id: ID!
+    nama: String!
     created_at: DateTime
     updated_at: DateTime
     deleted_at: DateTime

@@ -9,3 +9,7 @@ type Mutation
 #import userProfile/schema.graphql
 #import status/schema.graphql
 #import jenis/schema.graphql
+#import proyek/schema.graphql
+#import ModeJamKerja/schema.graphql
+#import StatusJamKerja/schema.graphql
+#import Aktivitas/schema.graphql

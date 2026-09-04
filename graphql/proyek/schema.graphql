@@ -1,0 +1,58 @@
+type Proyek {
+    id: ID!
+    kode: String!
+    nama: String!
+    tanggal: DateTime
+    nama_sekolah: String
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+}
+
+input CreateProyekInput {
+    kode: String!
+    nama: String!
+    tanggal: DateTime
+    nama_sekolah: String
+}
+
+input UpdateProyekInput {
+    id: ID!
+    kode: String
+    nama: String
+    tanggal: DateTime
+    nama_sekolah: String
+}
+
+extend type Query {
+    allProyek: [Proyek!]! @all(model: "App\\Models\\ModelProyek") @softDeletes
+
+    Proyek(id: ID! @eq(key: "id")): Proyek
+        @find(model: "App\\Models\\ModelProyek")
+        @softDeletes
+
+    ProyekByNama(
+        nama: String! @where(operator: "like", key: "nama")
+    ): [Proyek!]! @all(model: "App\\Models\\ModelProyek") @softDeletes
+}
+
+extend type Mutation {
+    createProyekInput(input: CreateProyekInput @spread): Proyek
+        @create(model: "App\\Models\\ModelProyek")
+
+    updateProyekInput(input: UpdateProyekInput @spread): Proyek
+        @update(model: "App\\Models\\ModelProyek")
+
+    deleteProyek(id: ID! @eq(key: "id")): Proyek
+        @delete(model: "App\\Models\\ModelProyek")
+
+    restoreProyek(id: ID! @eq(key: "id")): Proyek
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\proyek\\ProyekMutations@restore"
+        )
+
+    forceDeleteProyek(id: ID! @eq(key: "id")): Proyek
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\proyek\\ProyekMutations@forceDelete"
+        )
+}

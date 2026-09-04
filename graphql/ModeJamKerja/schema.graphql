@@ -1,0 +1,51 @@
+type ModeJamKerja {
+    id: ID!
+    nama: String!
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+}
+
+input CreateModeJamKerja{
+    nama: String!
+}
+
+input UpdateModeJamKerja{
+    id: ID!
+    nama: String!
+}
+
+extend type Query {
+    allModeJamKerja: [ModeJamKerja!]! @all(model: "App\\Models\\ModelModeJamKerja") @softDeletes
+
+    ModeJamKerja(id: ID! @eq(key: "id")): ModeJamKerja
+        @find(model: "App\\Models\\ModelModeJamKerja")
+        @softDeletes
+
+    ModeJamKerjaByNama(nama: String! @where(operator: "like", key: "nama")): [ModeJamKerja!]!
+        @all(model: "App\\Models\\ModelModeJamKerja")
+        @softDeletes
+}
+
+extend type Mutation {
+    createModeJamKerjaInput(input: CreateModeJamKerja @spread): ModeJamKerja
+        @create(model: "App\\Models\\ModelModeJamKerja")
+
+    updateModeJamKerjaInput(input: UpdateModeJamKerja @spread): ModeJamKerja
+        @update(model: "App\\Models\\ModelModeJamKerja")
+
+    deleteModeJamKerja(id: ID! @eq(key: "id")): ModeJamKerja
+        @delete(model: "App\\Models\\ModelModeJamKerja")
+
+    restoreModeJamKerja(id: ID! @eq(key: "id")): ModeJamKerja
+        @field(
+            resolver:
+                "App\\GraphQL\\Mutations\\ModeJamKerja\\ModeJamKerjaMutations@restore"
+        )
+
+    forceDeleteModeJamKerja(id: ID! @eq(key: "id")): ModeJamKerja
+        @field(
+            resolver:
+                "App\\GraphQL\\Mutations\\ModeJamKerja\\ModeJamKerjaMutations@forceDelete"
+        )
+}

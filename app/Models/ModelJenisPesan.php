@@ -18,11 +18,11 @@ class ModelJenisPesan extends Model
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
-    public function pesan() {
+    public function pesan()
+    {
         return $this->hasMany(ModelPesan::class, 'jenis_id');
     }
-
 }

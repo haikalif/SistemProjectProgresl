@@ -18,11 +18,11 @@ class ModelModeJamKerja extends Model
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
-    public function jamKerja() {
+    public function jamKerja()
+    {
         return $this->hasMany(ModelJamKerja::class, 'mode_id');
     }
-
 }

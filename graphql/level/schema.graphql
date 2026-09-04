@@ -3,6 +3,9 @@ type Level {
     nama: String!
     created_at: DateTime
     updated_at: DateTime
+    deleted_at: DateTime
+
+    usersProfiles: [UserProfile!]! @hasMany
 }
 
 input CreateLevelInput {
@@ -15,13 +18,15 @@ input UpdateLevelInput {
 }
 
 extend type Query {
-    allLevel: [Level!]! @all(model: "App\\Models\\ModelLevels")
+    allLevel: [Level!]! @all(model: "App\\Models\\ModelLevels") @softDeletes
 
     Level(id: ID! @eq(key: "id")): Level
         @find(model: "App\\Models\\ModelLevels")
+        @softDeletes
 
     LevelByNama(nama: String! @where(operator: "like", key: "nama")): [Level!]!
         @all(model: "App\\Models\\ModelLevels")
+        @softDeletes
 }
 
 extend type Mutation {
@@ -33,4 +38,14 @@ extend type Mutation {
 
     deleteLevel(id: ID! @eq(key: "id")): Level
         @delete(model: "App\\Models\\ModelLevels")
+
+    restoreLevel(id: ID! @eq(key: "id")): Level
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\Level\\levelMutations@restore"
+        )
+
+    forceDeleteLevel(id: ID! @eq(key: "id")): Level
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\Level\\levelMutations@forceDelete"
+        )
 }

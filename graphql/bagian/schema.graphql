@@ -3,6 +3,8 @@ type Bagian {
     nama: String!
     created_at: DateTime
     updated_at: DateTime
+
+    usersProfiles: [UserProfile!]! @hasMany
 }
 
 input CreateBagianInput {

@@ -5,39 +5,39 @@ type Status{
     updated_at: DateTime
     deleted_at: DateTime
 
-    usersProfile: [UsersProfile!]! @hasMany
+    usersProfiles: [UserProfile!]! @hasMany
 }
 
 extend type Query {
-    allStatus: [Status!]! @all(model: "App\\Models\\ModelStatus") @softDeletes
+    allStatus: [Status!]! @all(model: "App\\Models\\ModelStatuses") @softDeletes
 
     Status(id: ID! @eq(key: "id")): Status
-        @find(model: "App\\Models\\ModelStatus")
+        @find(model: "App\\Models\\ModelStatuses")
         @softDeletes
 
     StatusByNama(nama: String! @where(operator: "like", key: "nama")): [Status!]!
-        @all(model: "App\\Models\\ModelStatus")
+        @all(model: "App\\Models\\ModelStatuses")
         @softDeletes
 }
 
 extend type Mutation {
     createStatusInput(nama: String!): Status
-        @create(model: "App\\Models\\ModelStatus")
+        @create(model: "App\\Models\\ModelStatuses")
 
     updateStatusInput(id: ID!, nama: String!): Status
-        @update(model: "App\\Models\\ModelStatus")
+        @update(model: "App\\Models\\ModelStatuses")
 
     deleteStatus(id: ID! @eq(key: "id")): Status
-        @delete(model: "App\\Models\\ModelStatus")
+        @delete(model: "App\\Models\\ModelStatuses")
 
     restoreStatus(id: ID! @eq(key: "id")): Status
         @field(
-            resolver: "App\\GraphQL\\Mutations\\Status\\statusMutations@restore"
+            resolver: "App\\GraphQL\\Mutations\\status\\StatusMutations@restore"
         )
 
     forceDeleteStatus(id: ID! @eq(key: "id")): Status
         @field(
             resolver:
-                "App\\GraphQL\\Mutations\\Status\\statusMutations@forceDelete"
+                "App\\GraphQL\\Mutations\\status\\StatusMutations@forceDelete"
         )
 }

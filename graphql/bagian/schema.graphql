@@ -4,7 +4,7 @@ type Bagian {
     created_at: DateTime
     updated_at: DateTime
 
-    usersProfile: [UsersProfile!]! @hasMany
+    usersProfiles: [UserProfile!]! @hasMany
 }
 
 input CreateBagianInput {

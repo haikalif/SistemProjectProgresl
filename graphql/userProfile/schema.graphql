@@ -18,30 +18,6 @@ type UserProfile {
     deleted_at: DateTime
 }
 
-type Bagian {
-    id: ID!
-    nama_bagian: String!
-    created_at: DateTime
-    updated_at: DateTime
-    deleted_at: DateTime
-}
-
-type Level {
-    id: ID!
-    nama_level: String!
-    created_at: DateTime
-    updated_at: DateTime
-    deleted_at: DateTime
-}
-
-type Status {
-    id: ID!
-    nama: String!
-    created_at: DateTime
-    updated_at: DateTime
-    deleted_at: DateTime
-}
-
 input CreateUsersProfile {
     user_id: ID!
     nama_lengkap: String!
@@ -66,15 +42,15 @@ input UpdateUsersProfile {
 }
 
 extend type Query {
-    allUsersProfile: [UserProfile!]!
+    allUserProfile: [UserProfile!]!
         @all(model: "App\\Models\\ModelUsersProfile")
         @softDeletes
 
-    UsersProfile(id: ID! @eq(key: "id")): UserProfile
+    UserProfile(id: ID! @eq(key: "id")): UserProfile
         @find(model: "App\\Models\\ModelUsersProfile")
         @softDeletes
 
-    UsersProfileByNama(
+    UserProfileByNama(
         nama_lengkap: String! @where(operator: "like", key: "nama_lengkap")
     ): [UserProfile!]!
         @all(model: "App\\Models\\ModelUsersProfile")
@@ -82,21 +58,21 @@ extend type Query {
 }
 
 extend type Mutation {
-    createUsersProfileInput(input: CreateUsersProfile @spread): UserProfile
+    createUserProfileInput(input: CreateUsersProfile @spread): UserProfile
         @create(model: "App\\Models\\ModelUsersProfile")
 
-    updateUsersProfileInput(input: UpdateUsersProfile @spread): UserProfile
+    updateUserProfileInput(input: UpdateUsersProfile @spread): UserProfile
         @update(model: "App\\Models\\ModelUsersProfile")
 
-    deleteUsersProfile(id: ID! @eq(key: "id")): UserProfile
+    deleteUserProfile(id: ID! @eq(key: "id")): UserProfile
         @delete(model: "App\\Models\\ModelUsersProfile")
 
-    restoreUsersProfile(id: ID! @eq(key: "id")): UserProfile
+    restoreUserProfile(id: ID! @eq(key: "id")): UserProfile
         @field(
             resolver: "App\\GraphQL\\Mutations\\UsersProfile\\usersProfile@restore"
         )
 
-    forceDeleteUsersProfile(id: ID! @eq(key: "id")): UserProfile
+    forceDeleteUserProfile(id: ID! @eq(key: "id")): UserProfile
         @field(
             resolver: "App\\GraphQL\\Mutations\\UsersProfile\\usersProfile@forceDelete"
         )

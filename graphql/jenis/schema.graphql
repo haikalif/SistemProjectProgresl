@@ -6,6 +6,15 @@ type Jenis {
     deleted_at: DateTime
 }
 
+input CreateJenisInput {
+    nama: String!
+}
+
+input UpdateJenisInput {
+    id: ID!
+    nama: String!
+}
+
 extend type Query {
     allJenis: [Jenis!]! @all(model: "App\\Models\\ModelJenisPesan") @softDeletes
 
@@ -14,15 +23,15 @@ extend type Query {
         @softDeletes
 
     JenisByNama(
-        nama_jenis: String! @where(operator: "like", key: "nama_jenis")
+        nama: String! @where(operator: "like", key: "nama")
     ): [Jenis!]! @all(model: "App\\Models\\ModelJenisPesan") @softDeletes
 }
 
 extend type Mutation {
-    createJenisInput(nama_jenis: String!): Jenis
+    createJenisInput(nama: String!): Jenis
         @create(model: "App\\Models\\ModelJenisPesan")
 
-    updateJenisInput(id: ID!, nama_jenis: String!): Jenis
+    updateJenisInput(id: ID!, nama: String!): Jenis
         @update(model: "App\\Models\\ModelJenisPesan")
 
     deleteJenis(id: ID! @eq(key: "id")): Jenis
@@ -30,11 +39,11 @@ extend type Mutation {
 
     restoreJenis(id: ID! @eq(key: "id")): Jenis
         @field(
-            resolver: "App\\GraphQL\\Mutations\\Jenis\\jenisMutations@restore"
+            resolver: "App\\GraphQL\\Mutations\\jenis\\JenisMutations@restore"
         )
 
     forceDeleteJenis(id: ID! @eq(key: "id")): Jenis
         @field(
-            resolver: "App\\GraphQL\\Mutations\\Jenis\\jenisMutations@forceDelete"
+            resolver: "App\\GraphQL\\Mutations\\jenis\\JenisMutations@forceDelete"
         )
 }

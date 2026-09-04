@@ -8,3 +8,4 @@ type Mutation
 #import level/schema.graphql
 #import userProfile/schema.graphql
 #import status/schema.graphql
+#import jenis/schema.graphql

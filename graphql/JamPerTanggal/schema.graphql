@@ -1,0 +1,40 @@
+type JamPerTanggal {
+    id: ID!
+    users_profile_id: ID!
+    proyek_id: ID!
+    tanggal: Date!
+    jam: Float!
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+    users_profile: UserProfile @belongsTo
+    proyek: Proyek @belongsTo
+}
+
+input CreateJamPerTanggalInput {
+    users_profile_id: ID!
+    proyek_id: ID!
+    tanggal: Date!
+    jam: Float!
+}
+
+input UpdateJamPerTanggalInput {
+    id: ID!
+    users_profile_id: ID
+    proyek_id: ID
+    tanggal: Date
+    jam: Float
+}
+
+extend type Query {
+    allJamPerTanggal: [JamPerTanggal!]! @all(model: "App\\Models\\ModelJamPerTanggal") @softDeletes
+    JamPerTanggal(id: ID! @eq(key: "id")): JamPerTanggal @find(model: "App\\Models\\ModelJamPerTanggal") @softDeletes
+}
+
+extend type Mutation {
+    createJamPerTanggal(input: CreateJamPerTanggalInput @spread): JamPerTanggal @create(model: "App\\Models\\ModelJamPerTanggal")
+    updateJamPerTanggal(input: UpdateJamPerTanggalInput @spread): JamPerTanggal @update(model: "App\\Models\\ModelJamPerTanggal")
+    deleteJamPerTanggal(id: ID! @eq(key: "id")): JamPerTanggal @delete(model: "App\\Models\\ModelJamPerTanggal")
+    restoreJamPerTanggal(id: ID! @eq(key: "id")): JamPerTanggal @field(resolver: "App\\GraphQL\\Mutations\\JamPerTanggal\\JamPerTanggalMutations@restore")
+    forceDeleteJamPerTanggal(id: ID! @eq(key: "id")): JamPerTanggal @field(resolver: "App\\GraphQL\\Mutations\\JamPerTanggal\\JamPerTanggalMutations@forceDelete")
+}

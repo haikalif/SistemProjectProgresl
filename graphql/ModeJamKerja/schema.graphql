@@ -39,13 +39,11 @@ extend type Mutation {
 
     restoreModeJamKerja(id: ID! @eq(key: "id")): ModeJamKerja
         @field(
-            resolver:
-                "App\\GraphQL\\Mutations\\ModeJamKerja\\ModeJamKerjaMutations@restore"
+            resolver: "App\\GraphQL\\Mutations\\ModeJamKerja\\ModeJamKerjaMutations@restore"
         )
 
     forceDeleteModeJamKerja(id: ID! @eq(key: "id")): ModeJamKerja
         @field(
-            resolver:
-                "App\\GraphQL\\Mutations\\ModeJamKerja\\ModeJamKerjaMutations@forceDelete"
+            resolver: "App\\GraphQL\\Mutations\\ModeJamKerja\\ModeJamKerjaMutations@forceDelete"
         )
 }

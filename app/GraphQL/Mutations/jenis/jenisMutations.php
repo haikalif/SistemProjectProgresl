@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Mutations\jenis;
+namespace App\GraphQL\Mutations\Jenis;
 
 use App\Models\ModelJenisPesan;
 

@@ -32,12 +32,11 @@ extend type Mutation {
 
     restoreStatus(id: ID! @eq(key: "id")): Status
         @field(
-            resolver: "App\\GraphQL\\Mutations\\status\\StatusMutations@restore"
+            resolver: "App\\GraphQL\\Mutations\\Status\\StatusMutations@restore"
         )
 
     forceDeleteStatus(id: ID! @eq(key: "id")): Status
         @field(
-            resolver:
-                "App\\GraphQL\\Mutations\\status\\StatusMutations@forceDelete"
+            resolver: "App\\GraphQL\\Mutations\\Status\\StatusMutations@forceDelete"
         )
 }

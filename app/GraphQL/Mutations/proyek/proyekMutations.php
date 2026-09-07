@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Mutations\proyek;
+namespace App\GraphQL\Mutations\Proyek;
 
 use App\Models\ModelProyek;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Mutations\status;
+namespace App\GraphQL\Mutations\Status;
 
 
 class StatusMutations{

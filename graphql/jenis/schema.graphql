@@ -39,11 +39,11 @@ extend type Mutation {
 
     restoreJenis(id: ID! @eq(key: "id")): Jenis
         @field(
-            resolver: "App\\GraphQL\\Mutations\\jenis\\JenisMutations@restore"
+            resolver: "App\\GraphQL\\Mutations\\Jenis\\JenisMutations@restore"
         )
 
     forceDeleteJenis(id: ID! @eq(key: "id")): Jenis
         @field(
-            resolver: "App\\GraphQL\\Mutations\\jenis\\JenisMutations@forceDelete"
+            resolver: "App\\GraphQL\\Mutations\\Jenis\\JenisMutations@forceDelete"
         )
 }

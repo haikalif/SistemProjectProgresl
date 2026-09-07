@@ -2,7 +2,7 @@ type Proyek {
     id: ID!
     kode: String!
     nama: String!
-    tanggal: DateTime
+    tanggal: Date
     nama_sekolah: String
     created_at: DateTime
     updated_at: DateTime
@@ -12,7 +12,7 @@ type Proyek {
 input CreateProyekInput {
     kode: String!
     nama: String!
-    tanggal: DateTime
+    tanggal: Date
     nama_sekolah: String
 }
 
@@ -20,7 +20,7 @@ input UpdateProyekInput {
     id: ID!
     kode: String
     nama: String
-    tanggal: DateTime
+    tanggal: Date
     nama_sekolah: String
 }
 
@@ -48,11 +48,11 @@ extend type Mutation {
 
     restoreProyek(id: ID! @eq(key: "id")): Proyek
         @field(
-            resolver: "App\\GraphQL\\Mutations\\proyek\\ProyekMutations@restore"
+            resolver: "App\\GraphQL\\Mutations\\Proyek\\ProyekMutations@restore"
         )
 
     forceDeleteProyek(id: ID! @eq(key: "id")): Proyek
         @field(
-            resolver: "App\\GraphQL\\Mutations\\proyek\\ProyekMutations@forceDelete"
+            resolver: "App\\GraphQL\\Mutations\\Proyek\\ProyekMutations@forceDelete"
         )
 }

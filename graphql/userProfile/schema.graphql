@@ -69,11 +69,11 @@ extend type Mutation {
 
     restoreUserProfile(id: ID! @eq(key: "id")): UserProfile
         @field(
-            resolver: "App\\GraphQL\\Mutations\\UsersProfile\\usersProfile@restore"
+            resolver: "App\\GraphQL\\Mutations\\UsersProfile\\UsersProfileMutations@restore"
         )
 
     forceDeleteUserProfile(id: ID! @eq(key: "id")): UserProfile
         @field(
-            resolver: "App\\GraphQL\\Mutations\\UsersProfile\\usersProfile@forceDelete"
+            resolver: "App\\GraphQL\\Mutations\\UsersProfile\\UsersProfileMutations@forceDelete"
         )
 }

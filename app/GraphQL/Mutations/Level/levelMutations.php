@@ -4,7 +4,7 @@ namespace App\GraphQL\Mutations\Level;
 
 use App\Models\ModelLevels;
 
-class levelMutations
+class LevelMutations
 {
 
     public function restore($_, array $args)

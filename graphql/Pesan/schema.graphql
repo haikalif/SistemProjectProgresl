@@ -9,9 +9,9 @@ type Pesan {
     created_at: DateTime
     updated_at: DateTime
     deleted_at: DateTime
-    jenis: Jenis @belongsTo(relation: "jenis")
-    parent: Pesan @belongsTo(relation: "parent")
-    replies: [Pesan!] @hasMany(relation: "replies")
+    jenis: Jenis @belongsTo
+    parent: Pesan @belongsTo
+    replies: [Pesan!] @hasMany
 }
 
 input CreatePesanInput {
@@ -35,13 +35,24 @@ input UpdatePesanInput {
 
 extend type Query {
     allPesan: [Pesan!]! @all(model: "App\\Models\\ModelPesan") @softDeletes
-    Pesan(id: ID! @eq(key: "id")): Pesan @find(model: "App\\Models\\ModelPesan") @softDeletes
+    Pesan(id: ID! @eq(key: "id")): Pesan
+        @find(model: "App\\Models\\ModelPesan")
+        @softDeletes
 }
 
 extend type Mutation {
-    createPesan(input: CreatePesanInput @spread): Pesan @create(model: "App\\Models\\ModelPesan")
-    updatePesan(input: UpdatePesanInput @spread): Pesan @update(model: "App\\Models\\ModelPesan")
-    deletePesan(id: ID! @eq(key: "id")): Pesan @delete(model: "App\\Models\\ModelPesan")
-    restorePesan(id: ID! @eq(key: "id")): Pesan @field(resolver: "App\\GraphQL\\Mutations\\Pesan\\PesanMutations@restore")
-    forceDeletePesan(id: ID! @eq(key: "id")): Pesan @field(resolver: "App\\GraphQL\\Mutations\\Pesan\\PesanMutations@forceDelete")
+    createPesan(input: CreatePesanInput @spread): Pesan
+        @create(model: "App\\Models\\ModelPesan")
+    updatePesan(input: UpdatePesanInput @spread): Pesan
+        @update(model: "App\\Models\\ModelPesan")
+    deletePesan(id: ID! @eq(key: "id")): Pesan
+        @delete(model: "App\\Models\\ModelPesan")
+    restorePesan(id: ID! @eq(key: "id")): Pesan
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\Pesan\\PesanMutations@restore"
+        )
+    forceDeletePesan(id: ID! @eq(key: "id")): Pesan
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\Pesan\\PesanMutations@forceDelete"
+        )
 }

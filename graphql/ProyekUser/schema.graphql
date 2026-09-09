@@ -21,14 +21,27 @@ input UpdateProyekUserInput {
 }
 
 extend type Query {
-    allProyekUser: [ProyekUser!]! @all(model: "App\\Models\\ModelProyekUser") @softDeletes
-    ProyekUser(id: ID! @eq(key: "id")): ProyekUser @find(model: "App\\Models\\ModelProyekUser") @softDeletes
+    allProyekUser: [ProyekUser!]!
+        @all(model: "App\\Models\\ModelProyekUser")
+        @softDeletes
+    ProyekUser(id: ID! @eq(key: "id")): ProyekUser
+        @find(model: "App\\Models\\ModelProyekUser")
+        @softDeletes
 }
 
 extend type Mutation {
-    createProyekUser(input: CreateProyekUserInput @spread): ProyekUser @create(model: "App\\Models\\ModelProyekUser")
-    updateProyekUser(input: UpdateProyekUserInput @spread): ProyekUser @update(model: "App\\Models\\ModelProyekUser")
-    deleteProyekUser(id: ID! @eq(key: "id")): ProyekUser @delete(model: "App\\Models\\ModelProyekUser")
-    restoreProyekUser(id: ID! @eq(key: "id")): ProyekUser @field(resolver: "App\\GraphQL\\Mutations\\ProyekUser\\ProyekUserMutations@restore")
-    forceDeleteProyekUser(id: ID! @eq(key: "id")): ProyekUser @field(resolver: "App\\GraphQL\\Mutations\\ProyekUser\\ProyekUserMutations@forceDelete")
+    createProyekUser(input: CreateProyekUserInput @spread): ProyekUser
+        @create(model: "App\\Models\\ModelProyekUser")
+    updateProyekUser(input: UpdateProyekUserInput @spread): ProyekUser
+        @update(model: "App\\Models\\ModelProyekUser")
+    deleteProyekUser(id: ID! @eq(key: "id")): ProyekUser
+        @delete(model: "App\\Models\\ModelProyekUser")
+    restoreProyekUser(id: ID! @eq(key: "id")): ProyekUser
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\ProyekUser\\ProyekUserMutations@restore"
+        )
+    forceDeleteProyekUser(id: ID! @eq(key: "id")): ProyekUser
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\ProyekUser\\ProyekUserMutations@forceDelete"
+        )
 }

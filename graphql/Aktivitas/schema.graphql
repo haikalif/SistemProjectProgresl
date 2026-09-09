@@ -6,7 +6,7 @@ type Aktivitas {
     created_at: DateTime
     updated_at: DateTime
     deleted_at: DateTime
-    
+
     bagian: Bagian @belongsTo
 }
 
@@ -24,15 +24,17 @@ input UpdateAktivitasInput {
 }
 
 extend type Query {
-    allAktivitas: [Aktivitas!]! @all(model: "App\\Models\\ModelAktivitas") @softDeletes
+    allAktivitas: [Aktivitas!]!
+        @all(model: "App\\Models\\ModelAktivitas")
+        @softDeletes
 
     Aktivitas(id: ID! @eq(key: "id")): Aktivitas
         @find(model: "App\\Models\\ModelAktivitas")
         @softDeletes
 
-    AktivitasByNama(nama: String! @where(operator: "like", key: "nama")): [Aktivitas!]!
-        @all(model: "App\\Models\\ModelAktivitas")
-        @softDeletes
+    AktivitasByNama(
+        nama: String! @where(operator: "like", key: "nama")
+    ): [Aktivitas!]! @all(model: "App\\Models\\ModelAktivitas") @softDeletes
 }
 
 extend type Mutation {

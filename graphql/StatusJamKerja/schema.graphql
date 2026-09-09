@@ -16,23 +16,29 @@ input UpdateStatusJamKerjaInput {
 }
 
 extend type Query {
-    allStatusJamKerja: [StatusJamKerja!]! @all(model: "App\\Models\\ModelStatusJamKerja") @softDeletes
+    allStatusJamKerja: [StatusJamKerja!]!
+        @all(model: "App\\Models\\ModelStatusJamKerja")
+        @softDeletes
 
     StatusJamKerja(id: ID! @eq(key: "id")): StatusJamKerja
         @find(model: "App\\Models\\ModelStatusJamKerja")
         @softDeletes
 
-    StatusJamKerjaByNama(nama: String! @where(operator: "like", key: "nama")): [StatusJamKerja!]!
+    StatusJamKerjaByNama(
+        nama: String! @where(operator: "like", key: "nama")
+    ): [StatusJamKerja!]!
         @all(model: "App\\Models\\ModelStatusJamKerja")
         @softDeletes
 }
 
 extend type Mutation {
-    createStatusJamKerjaInput(input: CreateStatusJamKerjaInput @spread): StatusJamKerja
-        @create(model: "App\\Models\\ModelStatusJamKerja")
+    createStatusJamKerjaInput(
+        input: CreateStatusJamKerjaInput @spread
+    ): StatusJamKerja @create(model: "App\\Models\\ModelStatusJamKerja")
 
-    updateStatusJamKerjaInput(input: UpdateStatusJamKerjaInput @spread): StatusJamKerja
-        @update(model: "App\\Models\\ModelStatusJamKerja")
+    updateStatusJamKerjaInput(
+        input: UpdateStatusJamKerjaInput @spread
+    ): StatusJamKerja @update(model: "App\\Models\\ModelStatusJamKerja")
 
     deleteStatusJamKerja(id: ID! @eq(key: "id")): StatusJamKerja
         @delete(model: "App\\Models\\ModelStatusJamKerja")

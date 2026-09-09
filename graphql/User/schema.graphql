@@ -23,13 +23,21 @@ input UpdateUserInput {
 
 extend type Query {
     allUser: [User!]! @all(model: "App\\Models\\User") @softDeletes
-    User(id: ID! @eq(key: "id")): User @find(model: "App\\Models\\User") @softDeletes
+    User(id: ID! @eq(key: "id")): User
+        @find(model: "App\\Models\\User")
+        @softDeletes
 }
 
 extend type Mutation {
-    createUser(input: CreateUserInput @spread): User @create(model: "App\\Models\\User")
-    updateUser(input: UpdateUserInput @spread): User @update(model: "App\\Models\\User")
+    createUser(input: CreateUserInput @spread): User
+        @create(model: "App\\Models\\User")
+    updateUser(input: UpdateUserInput @spread): User
+        @update(model: "App\\Models\\User")
     deleteUser(id: ID! @eq(key: "id")): User @delete(model: "App\\Models\\User")
-    restoreUser(id: ID! @eq(key: "id")): User @field(resolver: "App\\GraphQL\\Mutations\\User\\UserMutations@restore")
-    forceDeleteUser(id: ID! @eq(key: "id")): User @field(resolver: "App\\GraphQL\\Mutations\\User\\UserMutations@forceDelete")
+    restoreUser(id: ID! @eq(key: "id")): User
+        @field(resolver: "App\\GraphQL\\Mutations\\User\\UserMutations@restore")
+    forceDeleteUser(id: ID! @eq(key: "id")): User
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\User\\UserMutations@forceDelete"
+        )
 }

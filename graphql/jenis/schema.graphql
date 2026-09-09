@@ -22,9 +22,9 @@ extend type Query {
         @find(model: "App\\Models\\ModelJenisPesan")
         @softDeletes
 
-    JenisByNama(
-        nama: String! @where(operator: "like", key: "nama")
-    ): [Jenis!]! @all(model: "App\\Models\\ModelJenisPesan") @softDeletes
+    JenisByNama(nama: String! @where(operator: "like", key: "nama")): [Jenis!]!
+        @all(model: "App\\Models\\ModelJenisPesan")
+        @softDeletes
 }
 
 extend type Mutation {

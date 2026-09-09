@@ -26,14 +26,9 @@ input UpdateProyekInput {
 
 extend type Query {
     allProyek: [Proyek!]! @all(model: "App\\Models\\ModelProyek") @softDeletes
-
-    Proyek(id: ID! @eq(key: "id")): Proyek
-        @find(model: "App\\Models\\ModelProyek")
-        @softDeletes
-
-    ProyekByNama(
-        nama: String! @where(operator: "like", key: "nama")
-    ): [Proyek!]! @all(model: "App\\Models\\ModelProyek") @softDeletes
+    \
+    ProyekSearch(search: String!): [Proyek!]!
+        @field(resolver: "App\\GraphQL\\Queries\\Proyek\\ProyekQueries@search")
 }
 
 extend type Mutation {

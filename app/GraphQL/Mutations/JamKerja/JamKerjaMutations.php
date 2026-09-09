@@ -8,10 +8,10 @@ class JamKerjaMutations
 {
     public function restore($_, array $args)
     {
-        $record = class_basename('App\Models\ModelJamKerja') === 'User' 
-            ? App\Models\ModelJamKerja::withTrashed()->find($args['id']) 
-            : App\Models\ModelJamKerja::withTrashed()->find($args['id']);
-            
+        $record = class_basename('App\Models\ModelJamKerja') === 'User'
+            ? ModelJamKerja::withTrashed()->find($args['id'])
+            : ModelJamKerja::withTrashed()->find($args['id']);
+
         if ($record) {
             $record->restore();
             return $record;
@@ -20,7 +20,7 @@ class JamKerjaMutations
 
     public function forceDelete($_, array $args)
     {
-        $record = App\Models\ModelJamKerja::withTrashed()->find($args['id']);
+        $record = ModelJamKerja::withTrashed()->find($args['id']);
         if ($record) {
             $record->forceDelete();
             return $record;

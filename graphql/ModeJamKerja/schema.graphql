@@ -6,23 +6,27 @@ type ModeJamKerja {
     deleted_at: DateTime
 }
 
-input CreateModeJamKerja{
+input CreateModeJamKerja {
     nama: String!
 }
 
-input UpdateModeJamKerja{
+input UpdateModeJamKerja {
     id: ID!
     nama: String!
 }
 
 extend type Query {
-    allModeJamKerja: [ModeJamKerja!]! @all(model: "App\\Models\\ModelModeJamKerja") @softDeletes
+    allModeJamKerja: [ModeJamKerja!]!
+        @all(model: "App\\Models\\ModelModeJamKerja")
+        @softDeletes
 
     ModeJamKerja(id: ID! @eq(key: "id")): ModeJamKerja
         @find(model: "App\\Models\\ModelModeJamKerja")
         @softDeletes
 
-    ModeJamKerjaByNama(nama: String! @where(operator: "like", key: "nama")): [ModeJamKerja!]!
+    ModeJamKerjaByNama(
+        nama: String! @where(operator: "like", key: "nama")
+    ): [ModeJamKerja!]!
         @all(model: "App\\Models\\ModelModeJamKerja")
         @softDeletes
 }

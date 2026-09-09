@@ -27,14 +27,27 @@ input UpdateJamPerTanggalInput {
 }
 
 extend type Query {
-    allJamPerTanggal: [JamPerTanggal!]! @all(model: "App\\Models\\ModelJamPerTanggal") @softDeletes
-    JamPerTanggal(id: ID! @eq(key: "id")): JamPerTanggal @find(model: "App\\Models\\ModelJamPerTanggal") @softDeletes
+    allJamPerTanggal: [JamPerTanggal!]!
+        @all(model: "App\\Models\\ModelJamPerTanggal")
+        @softDeletes
+    JamPerTanggal(id: ID! @eq(key: "id")): JamPerTanggal
+        @find(model: "App\\Models\\ModelJamPerTanggal")
+        @softDeletes
 }
 
 extend type Mutation {
-    createJamPerTanggal(input: CreateJamPerTanggalInput @spread): JamPerTanggal @create(model: "App\\Models\\ModelJamPerTanggal")
-    updateJamPerTanggal(input: UpdateJamPerTanggalInput @spread): JamPerTanggal @update(model: "App\\Models\\ModelJamPerTanggal")
-    deleteJamPerTanggal(id: ID! @eq(key: "id")): JamPerTanggal @delete(model: "App\\Models\\ModelJamPerTanggal")
-    restoreJamPerTanggal(id: ID! @eq(key: "id")): JamPerTanggal @field(resolver: "App\\GraphQL\\Mutations\\JamPerTanggal\\JamPerTanggalMutations@restore")
-    forceDeleteJamPerTanggal(id: ID! @eq(key: "id")): JamPerTanggal @field(resolver: "App\\GraphQL\\Mutations\\JamPerTanggal\\JamPerTanggalMutations@forceDelete")
+    createJamPerTanggal(input: CreateJamPerTanggalInput @spread): JamPerTanggal
+        @create(model: "App\\Models\\ModelJamPerTanggal")
+    updateJamPerTanggal(input: UpdateJamPerTanggalInput @spread): JamPerTanggal
+        @update(model: "App\\Models\\ModelJamPerTanggal")
+    deleteJamPerTanggal(id: ID! @eq(key: "id")): JamPerTanggal
+        @delete(model: "App\\Models\\ModelJamPerTanggal")
+    restoreJamPerTanggal(id: ID! @eq(key: "id")): JamPerTanggal
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\JamPerTanggal\\JamPerTanggalMutations@restore"
+        )
+    forceDeleteJamPerTanggal(id: ID! @eq(key: "id")): JamPerTanggal
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\JamPerTanggal\\JamPerTanggalMutations@forceDelete"
+        )
 }

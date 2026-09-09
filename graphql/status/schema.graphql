@@ -1,4 +1,4 @@
-type Status{
+type Status {
     id: ID!
     nama: String!
     created_at: DateTime
@@ -15,9 +15,9 @@ extend type Query {
         @find(model: "App\\Models\\ModelStatuses")
         @softDeletes
 
-    StatusByNama(nama: String! @where(operator: "like", key: "nama")): [Status!]!
-        @all(model: "App\\Models\\ModelStatuses")
-        @softDeletes
+    StatusByNama(
+        nama: String! @where(operator: "like", key: "nama")
+    ): [Status!]! @all(model: "App\\Models\\ModelStatuses") @softDeletes
 }
 
 extend type Mutation {

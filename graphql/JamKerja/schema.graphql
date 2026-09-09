@@ -48,14 +48,27 @@ input UpdateJamKerjaInput {
 }
 
 extend type Query {
-    allJamKerja: [JamKerja!]! @all(model: "App\\Models\\ModelJamKerja") @softDeletes
-    JamKerja(id: ID! @eq(key: "id")): JamKerja @find(model: "App\\Models\\ModelJamKerja") @softDeletes
+    allJamKerja: [JamKerja!]!
+        @all(model: "App\\Models\\ModelJamKerja")
+        @softDeletes
+    JamKerja(id: ID! @eq(key: "id")): JamKerja
+        @find(model: "App\\Models\\ModelJamKerja")
+        @softDeletes
 }
 
 extend type Mutation {
-    createJamKerja(input: CreateJamKerjaInput @spread): JamKerja @create(model: "App\\Models\\ModelJamKerja")
-    updateJamKerja(input: UpdateJamKerjaInput @spread): JamKerja @update(model: "App\\Models\\ModelJamKerja")
-    deleteJamKerja(id: ID! @eq(key: "id")): JamKerja @delete(model: "App\\Models\\ModelJamKerja")
-    restoreJamKerja(id: ID! @eq(key: "id")): JamKerja @field(resolver: "App\\GraphQL\\Mutations\\JamKerja\\JamKerjaMutations@restore")
-    forceDeleteJamKerja(id: ID! @eq(key: "id")): JamKerja @field(resolver: "App\\GraphQL\\Mutations\\JamKerja\\JamKerjaMutations@forceDelete")
+    createJamKerja(input: CreateJamKerjaInput @spread): JamKerja
+        @create(model: "App\\Models\\ModelJamKerja")
+    updateJamKerja(input: UpdateJamKerjaInput @spread): JamKerja
+        @update(model: "App\\Models\\ModelJamKerja")
+    deleteJamKerja(id: ID! @eq(key: "id")): JamKerja
+        @delete(model: "App\\Models\\ModelJamKerja")
+    restoreJamKerja(id: ID! @eq(key: "id")): JamKerja
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\JamKerja\\JamKerjaMutations@restore"
+        )
+    forceDeleteJamKerja(id: ID! @eq(key: "id")): JamKerja
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\JamKerja\\JamKerjaMutations@forceDelete"
+        )
 }

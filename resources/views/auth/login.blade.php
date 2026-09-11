@@ -20,5 +20,9 @@
         </div>
 
         <button type="submit" class="bg-blue-500 text-white w-full p-2 rounded">Login</button>
+
+        <div class="mt-4 text-center text-sm">
+            <a href="/register" class="text-blue-500 hover:underline">Belum punya akun? Daftar di sini</a>
+        </div>
     </form>
 </x-layouts.auth>

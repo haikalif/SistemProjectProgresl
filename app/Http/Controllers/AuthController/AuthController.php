@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthRequest;
 use App\Http\Requests\registerRequest;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -36,7 +37,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function logout(AuthRequest $request)
+    public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
@@ -53,8 +54,10 @@ class AuthController extends Controller
     {
 
         $user = User::create(
+
             $request->validated()
         );
+
 
         return redirect()->route('login')->with('success', 'registrasi berhasil.');
     }

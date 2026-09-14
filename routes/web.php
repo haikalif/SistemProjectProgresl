@@ -17,7 +17,10 @@ route::middleware(['auth'])->group(function () {
     route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
     route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Placeholder routes untuk sidebar (Bagian & Level)
-    route::get('/bagian', function() { return 'Halaman Bagian belum dibuat'; })->name('bagian.index');
+    // route untuk sidebar (Bagian & Level)
+    Route::get('/bagian', function() {
+        return view('components.bagian.index');
+    })->name('bagian.index');
+    
     route::get('/level', function() { return 'Halaman Level belum dibuat'; })->name('level.index');
 });

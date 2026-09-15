@@ -32,7 +32,7 @@ async function loadLevelData() {
     });
 
     const dataArsip = await resArsip.json();
-    renderLevelTable(dataAtsip?.data?.allArsip || [], "dataLevelArsip", false);
+    renderLevelTable(dataArsip?.data?.allArsip || [], "dataLevelArsip", false);
 }
 
 function renderLevelTable(levels, tableId, isActive) {
@@ -72,7 +72,7 @@ function renderLevelTable(levels, tableId, isActive) {
     });
 }
 
-async function archieveLevel(id) {
+async function archiveLevel(id) {
     if (!confirm("ingin mengarsipkan data ini?")) return;
     const mutation = `
         mutation{
@@ -123,3 +123,51 @@ async function forceDeleteLevel(id) {
     });
     loadLevelData();
 }
+
+async function searchLevel() {
+    const keyword = document.getElementById("searchLevel").value.trim();
+    if (!keyword) {
+        loadLevelData();
+        return;
+    }
+
+    let query = "";
+    if (!isNaN(keyword)) {
+        query = `
+            query{
+                Level(id: ${keyword}){
+                    id
+                    nama
+                }
+            }
+        `;
+        const res = await fetch("/graphql", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ query }),
+        });
+        const data = await res.json();
+        renderLevelTable(
+            data.data.Level ? [data.data.Level] : [],
+            "dataLevel",
+            true,
+        );
+    } else {
+        query = `
+            query{
+                LevelByNama(nama: "%${keyword}%"){
+                    id
+                    nama
+                }
+            }
+        `;
+        const res = await fetch("/graphql", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ query }),
+        });
+        const data = await res.json();
+        renderLevelTable(data.data.LevelByNama, "dataLevel", true);
+    }
+}
+document.addEventListener("DOMContentLoaded", loadLevelData); 

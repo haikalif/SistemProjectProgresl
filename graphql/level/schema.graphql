@@ -27,6 +27,10 @@ extend type Query {
     LevelByNama(nama: String! @where(operator: "like", key: "nama")): [Level!]!
         @all(model: "App\\Models\\ModelLevels")
         @softDeletes
+
+    allArsip: [Level!]!
+        @field(resolver: "App\\GraphQL\\Queries\\level\\LevelQuery@showTrashed")
+        @softDeletes
 }
 
 extend type Mutation {

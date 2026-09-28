@@ -16,6 +16,19 @@ input UpdateBagianInput {
     nama: String
 }
 
+type PageInfo {
+    hasMorePages: Boolean!
+    currentPage: Int!
+    lastPage: Int!
+    perPage: Int!
+    total: Int!
+}
+
+type BagianPaginator {
+    data: [Bagian!]!
+    PaginatorInfo: PageInfo!
+}
+
 extend type Query {
     allBagian: [Bagian!]! @all(model: "App\\Models\\ModelBagian")
 
@@ -25,6 +38,9 @@ extend type Query {
     BagianByNama(
         nama: String! @where(operator: "like", key: "nama")
     ): [Bagian!]! @all(model: "App\\Models\\ModelBagian")
+
+    allBagianPaginate(search: String, first: Int, page: Int): BagianPaginator
+        @field(resolver: "App\\GraphQL\\Queries\\bagian\\BagianQuery@all")
 }
 
 extend type Mutation {

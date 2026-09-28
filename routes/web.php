@@ -18,9 +18,12 @@ route::middleware(['auth'])->group(function () {
     route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // route untuk sidebar (Bagian & Level)
-    Route::get('/bagian', function() {
+    Route::get('/bagian', function () {
         return view('components.bagian.index');
     })->name('bagian.index');
-    
-    route::get('/level', function() { return 'Halaman Level belum dibuat'; })->name('level.index');
+
+    // route untuk sidebar (Bagian & Level)
+    Route::get('/level', function () {
+        return view('level.index');
+    })->name('level.index');
 });

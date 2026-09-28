@@ -1,95 +1,111 @@
-async function loadData(action = "all") {
-    let graphqlQuery;
-    const searchValue = document.getElementById("search").value.trim();
+const API_URL = "/graphql";
 
-    if (action === "search" && searchValue) {
-        if (!isNaN(searchValue)) {
-            graphqlQuery = `
-                query {
-                    bagian(id: ${searchValue}) {
-                        id
-                        nama
-                    }
-                }
-            `;
-        } else {
-            graphqlQuery = `
-                query {
-                    BagianByNama(nama: "%${searchValue}%") {
-                        id
-                        nama
-                    }
-                }
-            `;
+let currentPage = 1;
+
+async function loadDataPaginate(page = 1) {
+    currentPage = page;
+    const perPage = document.getElementById("perPage")?.value || 10;
+    const searchValue = document.getElementById("search")?.value.trim() || "";
+
+    const query = `
+    query($first: Int, $page: Int, $search: String){
+        allBagian(first: $first, $page: $page, $search: $search){
+            id
+            nama
         }
-    } else {
-        graphqlQuery = `
-            query {
-                allBagian {
-                    id
-                    nama
-                }
-            }
-        `;
+        paginatorInfo{
+            currentPage
+            lastPage
+            total
+            hasMorePages
+        }
     }
+}
+ `;
 
-    const res = await fetch("/graphql", {
+    const variables = { first: parseInt(perPage), page, search: searchValue };
+
+    const res = await fetch(API_URL, {
         method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ query: graphqlQuery }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query, variables }),
     });
     const data = await res.json();
+
     const tbody = document.getElementById("dataBagian");
     tbody.innerHTML = "";
 
-    let items = [];
-    if (data.errors) {
-        console.error("GRAPHQL ERROR:", data.errors);
-    }
-    if (data?.data?.allBagian) items = data.data.allBagian;
-    if (data?.data?.BagianByNama) items = data.data.BagianByNama;
-    if (data?.data?.bagian) items = [data.data.bagian];
+    const result = data.data.allBagianPaginate;
+    const items = result.data;
+    const pageInfo = result.paginatorInfo;
 
-    if (items.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="2">Data tidak ditemukan</td></tr>';
+    if (!items || items.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="3" class="text-center p-2">Data tidak ditemukan</td></tr>`;
+        document.getElementById("pageInfo").innerText = "Tidak ada data";
         return;
     }
 
+    // Render baris tabel
     items.forEach((item) => {
-        if (!item) return;
         tbody.innerHTML += `
         <tr>
-  <td class="border p-2">${item.id}</td>
-  <td class="border p-2">${item.nama}</td>
-  <td class="border p-2 flex gap-1">
-    <button onclick="openEditModal(${item.id}, '${item.nama}')" class="bg-yellow-500 text-white px-2 py-1 rounded">Edit</button>
-    <button onclick="hapusBagian(${item.id})" class="bg-red-500 text-white px-2 py-1 rounded">Hapus</button>
-  </td>
-</tr>
-
+            <td class="border p-2">${item.id}</td>
+            <td class="border p-2">${item.nama}</td>
+            <td class="border p-2 flex gap-1">
+                <button onclick="openEditModal(${item.id}, '${item.nama}')"
+                        class="bg-yellow-500 text-white px-2 py-1 rounded">
+                    Edit
+                </button>
+                <button onclick="hapusBagian(${item.id})"
+                        class="bg-red-500 text-white px-2 py-1 rounded">
+                    Hapus
+                </button>
+            </td>
+        </tr>
     `;
     });
+
+    // Update info halaman
+    document.getElementById("pageInfo").innerText =
+        `Halaman ${pageInfo.currentPage} dari ${pageInfo.lastPage} (Total: ${pageInfo.total})`;
+
+    // Update tombol prev/next
+    document.getElementById("prevBtn").disabled = pageInfo.currentPage <= 1;
+    document.getElementById("nextBtn").disabled = !pageInfo.hasMorePages;
 }
 
+// Pencarian
 function searchBagian() {
-    loadData("search");
+    loadDataPaginate(1);
 }
 
+// Pagination tombol
+function prevPage() {
+    if (currentPage > 1) loadDataPaginate(currentPage - 1);
+}
+
+function nextPage() {
+    loadDataPaginate(currentPage + 1);
+}
+
+// Hapus data
 async function hapusBagian(id) {
-    if (!confirm("yakin ingin menghapus ini?")) return;
+    if (!confirm("Yakin ingin menghapus data ini?")) return;
+
     const mutation = `
-        mutation{
-         deleteBagian(id: ${id}){
-         id
-         }
+        mutation($id: ID!) {
+            deleteBagian(id: $id) {
+                id
+            }
         }
     `;
-    await fetch("/graphql", {
+    await fetch(API_URL, {
         method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ query: mutation }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: mutation, variables: { id } }),
     });
-    loadData();
+    loadDataPaginate(currentPage);
 }
 
-document.addEventListener("DOMContentLoaded", () => loadData());
+// Load otomatis saat halaman siap
+document.addEventListener("DOMContentLoaded", () => loadDataPaginate());

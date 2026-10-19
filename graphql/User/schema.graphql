@@ -21,10 +21,23 @@ input UpdateUserInput {
     email: String
 }
 
+type UserPaginator {
+    data: [User!]!
+    PaginatorInfo: PageInfo!
+}
+
 extend type Query {
     allUser: [User!]! @all(model: "App\\Models\\User") @softDeletes
+
+    allUserPaginate(search: String, first: Int, page: Int): UserPaginator
+        @field(resolver: "App\\GraphQL\\Queries\\User\\UserQuery@all")
+
     User(id: ID! @eq(key: "id")): User
         @find(model: "App\\Models\\User")
+        @softDeletes
+
+    allArsipUser: [User!]!
+        @field(resolver: "App\\GraphQL\\Queries\\User\\UserQuery@showTrashed")
         @softDeletes
 }
 

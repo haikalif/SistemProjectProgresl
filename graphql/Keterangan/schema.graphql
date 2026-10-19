@@ -23,12 +23,33 @@ input UpdateKeteranganInput {
     tanggal: Date
 }
 
+type KeteranganPaginator {
+    data: [Keterangan!]!
+    PaginatorInfo: PageInfo!
+}
+
 extend type Query {
     allKeterangan: [Keterangan!]!
         @all(model: "App\\Models\\ModelKeterangan")
         @softDeletes
+
+    allKeteranganPaginate(
+        search: String
+        first: Int
+        page: Int
+    ): KeteranganPaginator
+        @field(
+            resolver: "App\\GraphQL\\Queries\\Keterangan\\KeteranganQuery@all"
+        )
+
     Keterangan(id: ID! @eq(key: "id")): Keterangan
         @find(model: "App\\Models\\ModelKeterangan")
+        @softDeletes
+
+    allArsipKeterangan: [Keterangan!]!
+        @field(
+            resolver: "App\\GraphQL\\Queries\\Keterangan\\KeteranganQuery@showTrashed"
+        )
         @softDeletes
 }
 

@@ -15,10 +15,24 @@ input UpdateStatusJamKerjaInput {
     nama: String
 }
 
+type StatusJamKerjaPaginator {
+    data: [StatusJamKerja!]!
+    PaginatorInfo: PageInfo!
+}
+
 extend type Query {
     allStatusJamKerja: [StatusJamKerja!]!
         @all(model: "App\\Models\\ModelStatusJamKerja")
         @softDeletes
+
+    allStatusJamKerjaPaginate(
+        search: String
+        first: Int
+        page: Int
+    ): StatusJamKerjaPaginator
+        @field(
+            resolver: "App\\GraphQL\\Queries\\StatusJamKerja\\StatusJamKerjaQuery@all"
+        )
 
     StatusJamKerja(id: ID! @eq(key: "id")): StatusJamKerja
         @find(model: "App\\Models\\ModelStatusJamKerja")
@@ -28,6 +42,12 @@ extend type Query {
         nama: String! @where(operator: "like", key: "nama")
     ): [StatusJamKerja!]!
         @all(model: "App\\Models\\ModelStatusJamKerja")
+        @softDeletes
+
+    allArsipStatusJamKerja: [StatusJamKerja!]!
+        @field(
+            resolver: "App\\GraphQL\\Queries\\StatusJamKerja\\StatusJamKerjaQuery@showTrashed"
+        )
         @softDeletes
 }
 

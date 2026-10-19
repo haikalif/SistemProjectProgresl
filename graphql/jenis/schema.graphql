@@ -15,8 +15,16 @@ input UpdateJenisInput {
     nama: String!
 }
 
+type JenisPaginator {
+    data: [Jenis!]!
+    PaginatorInfo: PageInfo!
+}
+
 extend type Query {
     allJenis: [Jenis!]! @all(model: "App\\Models\\ModelJenisPesan") @softDeletes
+
+    allJenisPaginate(search: String, first: Int, page: Int): JenisPaginator
+        @field(resolver: "App\\GraphQL\\Queries\\Jenis\\JenisQuery@all")
 
     Jenis(id: ID! @eq(key: "id")): Jenis
         @find(model: "App\\Models\\ModelJenisPesan")
@@ -24,6 +32,10 @@ extend type Query {
 
     JenisByNama(nama: String! @where(operator: "like", key: "nama")): [Jenis!]!
         @all(model: "App\\Models\\ModelJenisPesan")
+        @softDeletes
+
+    allArsipJenis: [Jenis!]!
+        @field(resolver: "App\\GraphQL\\Queries\\Jenis\\JenisQuery@showTrashed")
         @softDeletes
 }
 

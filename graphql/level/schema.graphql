@@ -17,6 +17,11 @@ input UpdateLevelInput {
     nama: String!
 }
 
+type LevelPaginator {
+    data: [Level!]!
+    PaginatorInfo: PageInfo!
+}
+
 extend type Query {
     allLevel: [Level!]! @all(model: "App\\Models\\ModelLevels") @softDeletes
 
@@ -31,6 +36,9 @@ extend type Query {
     allArsip: [Level!]!
         @field(resolver: "App\\GraphQL\\Queries\\level\\LevelQuery@showTrashed")
         @softDeletes
+
+    allLevelPaginate(search: String, first: Int, page: Int): LevelPaginator
+        @field(resolver: "App\\GraphQL\\Queries\\level\\LevelQuery@all")
 }
 
 extend type Mutation {

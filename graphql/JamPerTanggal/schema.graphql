@@ -26,12 +26,33 @@ input UpdateJamPerTanggalInput {
     jam: Float
 }
 
+type JamPerTanggalPaginator {
+    data: [JamPerTanggal!]!
+    PaginatorInfo: PageInfo!
+}
+
 extend type Query {
     allJamPerTanggal: [JamPerTanggal!]!
         @all(model: "App\\Models\\ModelJamPerTanggal")
         @softDeletes
+
+    allJamPerTanggalPaginate(
+        search: String
+        first: Int
+        page: Int
+    ): JamPerTanggalPaginator
+        @field(
+            resolver: "App\\GraphQL\\Queries\\JamPerTanggal\\JamPerTanggalQuery@all"
+        )
+
     JamPerTanggal(id: ID! @eq(key: "id")): JamPerTanggal
         @find(model: "App\\Models\\ModelJamPerTanggal")
+        @softDeletes
+
+    allArsipJamPerTanggal: [JamPerTanggal!]!
+        @field(
+            resolver: "App\\GraphQL\\Queries\\JamPerTanggal\\JamPerTanggalQuery@showTrashed"
+        )
         @softDeletes
 }
 

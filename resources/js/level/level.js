@@ -1,173 +1,213 @@
-async function loadLevelData() {
-    const queryAktif = `
-    query{
-     allLevel{
-        id
-        nama
-     }
-    }
-`;
-    const resAktif = await fetch("/graphql", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: queryAktif }),
-    });
-    const dataAktif = await resAktif.json();
-    renderLevelTable(dataAktif?.data?.allLevel || [], "dataLevel", true);
+let currentPage = 1;
 
-    const queryArsip = `
-        query{
-            allArsip{
-             id
-             nama
-             deleted_at
+async function loadDataPaginate(page = 1) {
+    currentPage = page;
+    const searchElement = document.getElementById("searchLevel") || document.getElementById("search");
+    const searchValue = searchElement ? searchElement.value.trim() : "";
+    const perPageElement = document.getElementById("perPage");
+    const perPage = perPageElement ? parseInt(perPageElement.value) : 10;
+
+    let graphqlQuery = `
+        query {
+            allLevelPaginate(search: "${searchValue}", first: ${perPage}, page: ${page}) {
+                data {
+                    id
+                    nama
+                }
+                PaginatorInfo {
+                    currentPage
+                    lastPage
+                    hasMorePages
+                    total
+                }
+            }
+            allArsip {
+                id
+                nama
             }
         }
     `;
 
-    const resArsip = await fetch("/graphql", {
+    const res = await fetch("/graphql", {
         method: "POST",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify({ query: queryArsip }),
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ query: graphqlQuery }),
     });
+    const data = await res.json();
+    const tbodyAktif = document.getElementById("dataLevel");
+    const tbodyArsip = document.getElementById("dataLevelArsip");
+    if (tbodyAktif) tbodyAktif.innerHTML = "";
+    if (tbodyArsip) tbodyArsip.innerHTML = "";
 
-    const dataArsip = await resArsip.json();
-    renderLevelTable(dataArsip?.data?.allArsip || [], "dataLevelArsip", false);
-}
-
-function renderLevelTable(levels, tableId, isActive) {
-    const tbody = document.getElementById(tableId);
-    tbody.innerHTML = "";
-
-    if (!levels.length) {
-        tbody.innerHTML = `
-      <tr>
-        <td colspan="3" class="text-center text-gray-500 p-3">Tidak ada data</td>
-      </tr>
-    `;
-        return;
+    if (data.errors) {
+        console.error("GRAPHQL ERROR:", data.errors);
+        // Fallback if PaginatorInfo is somehow wrong case
+        if (data.errors[0]?.message?.includes("Cannot query field")) {
+            graphqlQuery = graphqlQuery.replace("PaginatorInfo", "paginatorInfo");
+            const resRetry = await fetch("/graphql", {
+                method: "POST",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify({ query: graphqlQuery }),
+            });
+            const dataRetry = await resRetry.json();
+            handleData(dataRetry);
+            return;
+        }
     }
 
-    levels.forEach((item) => {
-        let actions = "";
-        if (isActive) {
-            actions = `
-        <button onclick="openEditLevelModal(${item.id}, '${item.nama}')" class="bg-yellow-500 text-white px-2 py-1 rounded">Edit</button>
-        <button onclick="archiveLevel(${item.id})" class="bg-red-500 text-white px-2 py-1 rounded">Arsipkan</button>
-      `;
-        } else {
-            actions = `
-        <button onclick="restoreLevel(${item.id})" class="bg-green-500 text-white px-2 py-1 rounded">Restore</button>
-        <button onclick="forceDeleteLevel(${item.id})" class="bg-red-700 text-white px-2 py-1 rounded">Hapus Permanen</button>
-      `;
-        }
-
-        tbody.innerHTML += `
-      <tr>
-        <td class="border p-2">${item.id}</td>
-        <td class="border p-2">${item.nama}</td>
-        <td class="border p-2">${actions}</td>
-      </tr>
-    `;
-    });
+    handleData(data);
 }
 
-async function archiveLevel(id) {
-    if (!confirm("ingin mengarsipkan data ini?")) return;
+function handleData(data) {
+    const tbodyAktif = document.getElementById("dataLevel");
+    const tbodyArsip = document.getElementById("dataLevelArsip");
+
+    const result = data?.data?.allLevelPaginate;
+    const itemsAktif = result?.data || [];
+    const info = result?.PaginatorInfo || result?.paginatorInfo;
+    const itemsArsip = data?.data?.allArsip || [];
+
+    // Render Data Aktif
+    if (itemsAktif.length === 0) {
+        if (tbodyAktif) {
+            tbodyAktif.innerHTML = '<tr><td colspan="3" class="text-center p-2">Data tidak ditemukan</td></tr>';
+        }
+
+        const pageInfoElement = document.getElementById("pageInfo");
+        if (pageInfoElement) pageInfoElement.innerText = "";
+
+        const prevBtn = document.getElementById("prevBtn");
+        if (prevBtn) prevBtn.disabled = true;
+
+        const nextBtn = document.getElementById("nextBtn");
+        if (nextBtn) nextBtn.disabled = true;
+    } else {
+        if (tbodyAktif) {
+            itemsAktif.forEach((item) => {
+                if (!item) return;
+                tbodyAktif.innerHTML += `
+                <tr>
+                    <td class="border p-2 text-center">${item.id}</td>
+                    <td class="border p-2">${item.nama}</td>
+                    <td class="border p-2 flex gap-1 justify-center">
+                        <button onclick="openEditLevelModal(${item.id}, '${item.nama}')" class="bg-yellow-500 text-white px-2 py-1 rounded">Edit</button>
+                        <button onclick="hapusLevel(${item.id})" class="bg-red-500 text-white px-2 py-1 rounded">Hapus</button>
+                    </td>
+                </tr>
+                `;
+            });
+        }
+
+        if (info) {
+            const pageInfoElement = document.getElementById("pageInfo");
+            if (pageInfoElement) {
+                pageInfoElement.innerText = `Halaman ${info.currentPage} dari ${info.lastPage} (Total: ${info.total})`;
+            }
+
+            const prevBtn = document.getElementById("prevBtn");
+            if (prevBtn) prevBtn.disabled = info.currentPage <= 1;
+
+            const nextBtn = document.getElementById("nextBtn");
+            if (nextBtn) nextBtn.disabled = !info.hasMorePages;
+        }
+    }
+
+    // Render Data Arsip
+    if (tbodyArsip) {
+        if (itemsArsip.length === 0) {
+            tbodyArsip.innerHTML = '<tr><td colspan="3" class="text-center p-2 border">Data arsip tidak ditemukan</td></tr>';
+        } else {
+            itemsArsip.forEach((item) => {
+                if (!item) return;
+                tbodyArsip.innerHTML += `
+                <tr>
+                    <td class="border p-2 text-center">${item.id}</td>
+                    <td class="border p-2">${item.nama}</td>
+                    <td class="border p-2 flex gap-1 justify-center">
+                        <button onclick="restoreLevel(${item.id})" class="bg-green-500 text-white px-2 py-1 rounded">Restore</button>
+                        <button onclick="forceHapusLevel(${item.id})" class="bg-red-700 text-white px-2 py-1 rounded">Hapus Permanen</button>
+                    </td>
+                </tr>
+                `;
+            });
+        }
+    }
+}
+
+// Wrapper for backward compatibility with create/edit files that call loadData()
+async function loadData() {
+    await loadDataPaginate(currentPage);
+}
+
+function searchLevel() {
+    loadDataPaginate(1);
+}
+
+function prevPage() {
+    if (currentPage > 1) {
+        loadDataPaginate(currentPage - 1);
+    }
+}
+
+function nextPage() {
+    loadDataPaginate(currentPage + 1);
+}
+
+async function hapusLevel(id) {
+    if (!confirm("Yakin ingin mengarsipkan data ini?")) return;
     const mutation = `
         mutation{
             deleteLevel(id: ${id}){
                 id
             }
         }
-  `;
-
+    `;
     await fetch("/graphql", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "content-type": "application/json" },
         body: JSON.stringify({ query: mutation }),
     });
-    loadLevelData();
+    loadDataPaginate(currentPage);
 }
+
+// Alias for archiveLevel if referenced
+const archiveLevel = hapusLevel;
 
 async function restoreLevel(id) {
-    if (!confirm("kembalikan data ini?")) return;
+    if (!confirm("Yakin ingin mengembalikan data ini?")) return;
     const mutation = `
-            mutation{
-                restoreLevel(id: ${id}){
-                    id
-                }
+        mutation{
+            restoreLevel(id: ${id}){
+                id
             }
-        `;
+        }
+    `;
     await fetch("/graphql", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "content-type": "application/json" },
         body: JSON.stringify({ query: mutation }),
     });
-    loadLevelData();
+    loadDataPaginate(currentPage);
 }
 
-async function forceDeleteLevel(id) {
-    if (!confirm("ingin menghapus permanen data ini?")) return;
+async function forceHapusLevel(id) {
+    if (!confirm("Yakin ingin menghapus permanen data ini?")) return;
     const mutation = `
-            mutation{
-                forceDeleteLevel(id: ${id}){
-                    id
-                }
+        mutation{
+            forceDeleteLevel(id: ${id}){
+                id
             }
-        `;
+        }
+    `;
     await fetch("/graphql", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "content-type": "application/json" },
         body: JSON.stringify({ query: mutation }),
     });
-    loadLevelData();
+    loadDataPaginate(currentPage);
 }
 
-async function searchLevel() {
-    const keyword = document.getElementById("searchLevel").value.trim();
-    if (!keyword) {
-        loadLevelData();
-        return;
-    }
+// Alias for forceDeleteLevel if referenced
+const forceDeleteLevel = forceHapusLevel;
 
-    let query = "";
-    if (!isNaN(keyword)) {
-        query = `
-            query{
-                Level(id: ${keyword}){
-                    id
-                    nama
-                }
-            }
-        `;
-        const res = await fetch("/graphql", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ query }),
-        });
-        const data = await res.json();
-        renderLevelTable(
-            data.data.Level ? [data.data.Level] : [],
-            "dataLevel",
-            true,
-        );
-    } else {
-        query = `
-            query{
-                LevelByNama(nama: "%${keyword}%"){
-                    id
-                    nama
-                }
-            }
-        `;
-        const res = await fetch("/graphql", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ query }),
-        });
-        const data = await res.json();
-        renderLevelTable(data.data.LevelByNama, "dataLevel", true);
-    }
-}
-document.addEventListener("DOMContentLoaded", loadLevelData); 
+document.addEventListener("DOMContentLoaded", () => loadDataPaginate(1));

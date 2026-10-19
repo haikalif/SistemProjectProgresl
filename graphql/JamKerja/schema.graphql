@@ -47,12 +47,29 @@ input UpdateJamKerjaInput {
     mode_id: ID
 }
 
+type JamKerjaPaginator {
+    data: [JamKerja!]!
+    PaginatorInfo: PageInfo!
+}
+
 extend type Query {
     allJamKerja: [JamKerja!]!
         @all(model: "App\\Models\\ModelJamKerja")
         @softDeletes
+
+    allJamKerjaPaginate(
+        search: String
+        first: Int
+        page: Int
+    ): JamKerjaPaginator
+        @field(resolver: "App\\GraphQL\\Queries\\JamKerja\\JamKerjaQuery@all")
+
     JamKerja(id: ID! @eq(key: "id")): JamKerja
         @find(model: "App\\Models\\ModelJamKerja")
+        @softDeletes
+
+    allArsipJamKerja: [JamKerja!]!
+        @field(resolver: "App\\GraphQL\\Queries\\JamKerja\\JamKerjaQuery@showTrashed")
         @softDeletes
 }
 

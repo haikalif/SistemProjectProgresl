@@ -15,10 +15,24 @@ input UpdateModeJamKerja {
     nama: String!
 }
 
+type ModeJamKerjaPaginator {
+    data: [ModeJamKerja!]!
+    PaginatorInfo: PageInfo!
+}
+
 extend type Query {
     allModeJamKerja: [ModeJamKerja!]!
         @all(model: "App\\Models\\ModelModeJamKerja")
         @softDeletes
+
+    allModeJamKerjaPaginate(
+        search: String
+        first: Int
+        page: Int
+    ): ModeJamKerjaPaginator
+        @field(
+            resolver: "App\\GraphQL\\Queries\\ModeJamKerja\\ModeJamKerjaQuery@all"
+        )
 
     ModeJamKerja(id: ID! @eq(key: "id")): ModeJamKerja
         @find(model: "App\\Models\\ModelModeJamKerja")
@@ -28,6 +42,12 @@ extend type Query {
         nama: String! @where(operator: "like", key: "nama")
     ): [ModeJamKerja!]!
         @all(model: "App\\Models\\ModelModeJamKerja")
+        @softDeletes
+
+    allArsipModeJamKerja: [ModeJamKerja!]!
+        @field(
+            resolver: "App\\GraphQL\\Queries\\ModeJamKerja\\ModeJamKerjaQuery@showTrashed"
+        )
         @softDeletes
 }
 

@@ -8,8 +8,16 @@ type Status {
     usersProfiles: [UserProfile!]! @hasMany
 }
 
+type StatusPaginator {
+    data: [Status!]!
+    PaginatorInfo: PageInfo!
+}
+
 extend type Query {
     allStatus: [Status!]! @all(model: "App\\Models\\ModelStatuses") @softDeletes
+
+    allStatusPaginate(search: String, first: Int, page: Int): StatusPaginator
+        @field(resolver: "App\\GraphQL\\Queries\\Status\\StatusQuery@all")
 
     Status(id: ID! @eq(key: "id")): Status
         @find(model: "App\\Models\\ModelStatuses")
@@ -18,6 +26,10 @@ extend type Query {
     StatusByNama(
         nama: String! @where(operator: "like", key: "nama")
     ): [Status!]! @all(model: "App\\Models\\ModelStatuses") @softDeletes
+
+    allArsipStatus: [Status!]!
+        @field(resolver: "App\\GraphQL\\Queries\\Status\\StatusQuery@showTrashed")
+        @softDeletes
 }
 
 extend type Mutation {

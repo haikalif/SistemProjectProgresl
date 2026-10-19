@@ -41,10 +41,24 @@ input UpdateUsersProfile {
     status_id: ID
 }
 
+type UserProfilePaginator {
+    data: [UserProfile!]!
+    PaginatorInfo: PageInfo!
+}
+
 extend type Query {
     allUserProfile: [UserProfile!]!
         @all(model: "App\\Models\\ModelUsersProfile")
         @softDeletes
+
+    allUserProfilePaginate(
+        search: String
+        first: Int
+        page: Int
+    ): UserProfilePaginator
+        @field(
+            resolver: "App\\GraphQL\\Queries\\UserProfile\\UserProfileQuery@all"
+        )
 
     UserProfile(id: ID! @eq(key: "id")): UserProfile
         @find(model: "App\\Models\\ModelUsersProfile")
@@ -54,6 +68,12 @@ extend type Query {
         nama_lengkap: String! @where(operator: "like", key: "nama_lengkap")
     ): [UserProfile!]!
         @all(model: "App\\Models\\ModelUsersProfile")
+        @softDeletes
+
+    allArsipUserProfile: [UserProfile!]!
+        @field(
+            resolver: "App\\GraphQL\\Queries\\UserProfile\\UserProfileQuery@showTrashed"
+        )
         @softDeletes
 }
 

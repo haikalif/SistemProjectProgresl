@@ -20,12 +20,33 @@ input UpdateProyekUserInput {
     users_profile_id: ID
 }
 
+type ProyekUserPaginator {
+    data: [ProyekUser!]!
+    PaginatorInfo: PageInfo!
+}
+
 extend type Query {
     allProyekUser: [ProyekUser!]!
         @all(model: "App\\Models\\ModelProyekUser")
         @softDeletes
+
+    allProyekUserPaginate(
+        search: String
+        first: Int
+        page: Int
+    ): ProyekUserPaginator
+        @field(
+            resolver: "App\\GraphQL\\Queries\\ProyekUser\\ProyekUserQuery@all"
+        )
+
     ProyekUser(id: ID! @eq(key: "id")): ProyekUser
         @find(model: "App\\Models\\ModelProyekUser")
+        @softDeletes
+
+    allArsipProyekUser: [ProyekUser!]!
+        @field(
+            resolver: "App\\GraphQL\\Queries\\ProyekUser\\ProyekUserQuery@showTrashed"
+        )
         @softDeletes
 }
 

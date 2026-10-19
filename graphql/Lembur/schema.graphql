@@ -22,8 +22,17 @@ input UpdateLemburInput {
     tanggal: Date
 }
 
+type LemburPaginator {
+    data: [Lembur!]!
+    PaginatorInfo: PageInfo!
+}
+
 extend type Query {
     allLembur: [Lembur!]! @all(model: "App\\Models\\ModelLembur")
+
+    allLemburPaginate(search: String, first: Int, page: Int): LemburPaginator
+        @field(resolver: "App\\GraphQL\\Queries\\Lembur\\LemburQuery@all")
+
     Lembur(id: ID! @eq(key: "id")): Lembur
         @find(model: "App\\Models\\ModelLembur")
 }

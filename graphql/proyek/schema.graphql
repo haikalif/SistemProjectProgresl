@@ -24,11 +24,23 @@ input UpdateProyekInput {
     nama_sekolah: String
 }
 
+type ProyekPaginator {
+    data: [Proyek!]!
+    PaginatorInfo: PageInfo!
+}
+
 extend type Query {
     allProyek: [Proyek!]! @all(model: "App\\Models\\ModelProyek") @softDeletes
-    
+
+    allProyekPaginate(search: String, first: Int, page: Int): ProyekPaginator
+        @field(resolver: "App\\GraphQL\\Queries\\Proyek\\ProyekQuery@all")
+
     ProyekSearch(search: String!): [Proyek!]!
-        @field(resolver: "App\\GraphQL\\Queries\\Proyek\\ProyekQueries@search")
+        @field(resolver: "App\\GraphQL\\Queries\\Proyek\\ProyekQuery@all")
+
+    allArsipProyek: [Proyek!]!
+        @field(resolver: "App\\GraphQL\\Queries\\Proyek\\ProyekQuery@showTrashed")
+        @softDeletes
 }
 
 extend type Mutation {

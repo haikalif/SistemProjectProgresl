@@ -7,18 +7,39 @@ use App\Models\ModelProyek;
 class ProyekQuery
 {
 
-    public function getProyek($_, array $args)
+    public function all($_, array $args)
     {
         $query = ModelProyek::query();
 
         if (!empty($args['search'])) {
-            $query->where('nama_proyek', 'like', '%' . $args['search'] . '%')
-                ->orWhere('id', 'like', '%' . $args['search'] . '%')
-                ->orWhere('nama', 'like', '%' . $args['search'] . '%')
-                ->orWhere('kode', 'like', '%' . $args['search'] . '%')
-                ->orWhere('nama_sekolah', 'like', '%' . $args['search'] . '%');
+            $search = $args['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', '%' . $search . '%')
+                    ->orWhere('kode', 'like', '%' . $search . '%')
+                    ->orWhere('nama_sekolah', 'like', '%' . $search . '%')
+                    ->orWhere('id', 'like', '%' . $search . '%');
+            });
         }
 
-        return $query->get();
+        $perPage = $args['first'] ?? 10;
+        $page = $args['page'] ?? 1;
+
+        $paginator = $query->paginate($perPage, ['*'], 'page', $page);
+
+        return [
+            'data'  => $paginator->items(),
+            'PaginatorInfo' => [
+                'hasMorePages' => $paginator->hasMorePages(),
+                'currentPage' => $paginator->currentPage(),
+                'lastPage' => $paginator->lastPage(),
+                'perPage' => $paginator->perPage(),
+                'total' => $paginator->total(),
+            ],
+        ];
+    }
+
+    public function showTrashed()
+    {
+        return ModelProyek::onlyTrashed()->get();
     }
 }

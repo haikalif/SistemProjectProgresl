@@ -23,10 +23,18 @@ input UpdateAktivitasInput {
     nama: String
 }
 
+type AktivitasPaginator {
+    data: [Aktivitas!]!
+    PaginatorInfo: PageInfo!
+}
+
 extend type Query {
     allAktivitas: [Aktivitas!]!
         @all(model: "App\\Models\\ModelAktivitas")
         @softDeletes
+
+    allAktivitasPaginate(search: String, first: Int, page: Int): AktivitasPaginator
+        @field(resolver: "App\\GraphQL\\Queries\\Aktivitas\\AktivitasQuery@all")
 
     Aktivitas(id: ID! @eq(key: "id")): Aktivitas
         @find(model: "App\\Models\\ModelAktivitas")
@@ -35,6 +43,10 @@ extend type Query {
     AktivitasByNama(
         nama: String! @where(operator: "like", key: "nama")
     ): [Aktivitas!]! @all(model: "App\\Models\\ModelAktivitas") @softDeletes
+
+    allArsipAktivitas: [Aktivitas!]!
+        @field(resolver: "App\\GraphQL\\Queries\\Aktivitas\\AktivitasQuery@showTrashed")
+        @softDeletes
 }
 
 extend type Mutation {

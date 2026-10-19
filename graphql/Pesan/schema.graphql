@@ -33,10 +33,23 @@ input UpdatePesanInput {
     jenis_id: ID
 }
 
+type PesanPaginator {
+    data: [Pesan!]!
+    PaginatorInfo: PageInfo!
+}
+
 extend type Query {
     allPesan: [Pesan!]! @all(model: "App\\Models\\ModelPesan") @softDeletes
+
+    allPesanPaginate(search: String, first: Int, page: Int): PesanPaginator
+        @field(resolver: "App\\GraphQL\\Queries\\Pesan\\PesanQuery@all")
+
     Pesan(id: ID! @eq(key: "id")): Pesan
         @find(model: "App\\Models\\ModelPesan")
+        @softDeletes
+
+    allArsipPesan: [Pesan!]!
+        @field(resolver: "App\\GraphQL\\Queries\\Pesan\\PesanQuery@showTrashed")
         @softDeletes
 }
 
